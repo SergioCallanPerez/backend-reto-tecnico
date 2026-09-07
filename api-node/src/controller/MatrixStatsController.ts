@@ -4,6 +4,7 @@ import { AppError } from '../model/AppError';
 import { MatrixStatsResponse } from '../model/MatrixStats';
 
 const OUTPUT_PRECISION = 6;
+const MAX_MATRIX_DIMENSION = 500;
 
 export class MatrixStatsController {
   constructor(private readonly statsService: MatrixStatsService) {
@@ -22,9 +23,13 @@ export class MatrixStatsController {
   };
 }
 
+// No confía en que solo Go la llame: valida tamaño igual que el handler de Go.
 function validateMatrix(value: unknown, name: string): number[][] {
   if (!Array.isArray(value) || value.length === 0 || !Array.isArray(value[0])) {
     throw AppError.validation(`"${name}" must be a non-empty array of arrays of numbers`);
+  }
+  if (value.length > MAX_MATRIX_DIMENSION || value[0].length > MAX_MATRIX_DIMENSION) {
+    throw AppError.validation(`"${name}" exceeds the maximum allowed size`, 'matrices are limited to 500x500');
   }
   const width = value[0].length;
   for (const row of value) {

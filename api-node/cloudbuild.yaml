@@ -1,0 +1,29 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:$SHORT_SHA'
+      - '-t'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:latest'
+      - './api-node'
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node'
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'api-node'
+      - '--image=us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:$SHORT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:$SHORT_SHA'
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:latest'
