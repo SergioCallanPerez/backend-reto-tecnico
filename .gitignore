@@ -1,0 +1,16 @@
+# Node
+node_modules/
+dist/
+*.log
+
+# Go
+/api-go/api-go
+/api-go/*.exe
+
+# Entornos
+.env
+.env.local
+
+# Editores / SO
+.vscode/
+.DS_Store
