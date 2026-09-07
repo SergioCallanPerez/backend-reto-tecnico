@@ -27,3 +27,7 @@ steps:
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:$SHORT_SHA'
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/backend-reto-tecnico/api-node:latest'
+
+# Requerido al usar una cuenta de servicio personalizada
+options:
+  logging: CLOUD_LOGGING_ONLY
