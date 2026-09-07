@@ -1,0 +1,24 @@
+services:
+  api-go:
+    build:
+      context: ./api-go
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - NODE_API_URL=http://api-node:3000
+      - LOG_LEVEL=debug
+      - HTTP_CLIENT_TIMEOUT_MS=2000
+    depends_on:
+      - api-node
+
+  api-node:
+    build:
+      context: ./api-node
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - LOG_LEVEL=debug
