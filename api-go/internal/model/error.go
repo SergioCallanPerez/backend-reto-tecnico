@@ -5,9 +5,10 @@ import "net/http"
 type ErrorCode string
 
 const (
-	ErrCodeValidation ErrorCode = "VALIDATION_ERROR"
-	ErrCodeUpstream   ErrorCode = "UPSTREAM_ERROR"
-	ErrCodeInternal   ErrorCode = "INTERNAL_ERROR"
+	ErrCodeValidation   ErrorCode = "VALIDATION_ERROR"
+	ErrCodeUpstream     ErrorCode = "UPSTREAM_ERROR"
+	ErrCodeInternal     ErrorCode = "INTERNAL_ERROR"
+	ErrCodeUnauthorized ErrorCode = "UNAUTHORIZED"
 )
 
 type AppError struct {
@@ -26,6 +27,8 @@ func (e *AppError) HTTPStatus() int {
 		return http.StatusBadRequest
 	case ErrCodeUpstream:
 		return http.StatusBadGateway
+	case ErrCodeUnauthorized:
+		return http.StatusUnauthorized
 	default:
 		return http.StatusInternalServerError
 	}
@@ -41,4 +44,8 @@ func NewUpstreamError(message, detail string) *AppError {
 
 func NewInternalError(message string) *AppError {
 	return &AppError{Code: ErrCodeInternal, Message: message}
+}
+
+func NewUnauthorizedError(message string) *AppError {
+	return &AppError{Code: ErrCodeUnauthorized, Message: message}
 }

@@ -10,6 +10,8 @@ services:
       - NODE_API_URL=http://api-node:3000
       - LOG_LEVEL=debug
       - HTTP_CLIENT_TIMEOUT_MS=2000
+    env_file:
+      - ./api-go/.env
     depends_on:
       - api-node
 
