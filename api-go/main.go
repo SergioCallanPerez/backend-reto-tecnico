@@ -8,7 +8,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/joho/godotenv"
 
+	"github.com/SergioCallanPerez/backend-reto-tecnico/api-go/internal/auth"
 	"github.com/SergioCallanPerez/backend-reto-tecnico/api-go/internal/client"
 	"github.com/SergioCallanPerez/backend-reto-tecnico/api-go/internal/handler"
 	"github.com/SergioCallanPerez/backend-reto-tecnico/api-go/internal/logging"
@@ -18,6 +20,7 @@ import (
 const defaultHTTPClientTimeoutMs = 2000
 
 func main() {
+	_ = godotenv.Load()
 	logging.Setup(os.Getenv("LOG_LEVEL"))
 
 	app := fiber.New()
@@ -58,7 +61,12 @@ func main() {
 	rotateService := service.NewRotateService()
 	rotateHandler := handler.NewRotateHandler(rotateService)
 
-	v1 := app.Group("/api/v1")
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if jwtSecret == "" {
+		panic("falta la variable de entorno JWT_SECRET")
+	}
+
+	v1 := app.Group("/api/v1", auth.Middleware([]byte(jwtSecret)))
 	matrixHandler.RegisterRoutes(v1)
 	rotateHandler.RegisterRoutes(v1)
 
