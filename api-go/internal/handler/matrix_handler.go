@@ -40,7 +40,7 @@ func (h *MatrixHandler) RegisterRoutes(router fiber.Router) {
 func (h *MatrixHandler) PostMatrixQR(c *fiber.Ctx) error {
 	var req model.MatrixRequest
 	if err := c.BodyParser(&req); err != nil {
-		return writeError(c, model.NewValidationError("invalid request body", err.Error()))
+		return writeError(c, model.NewValidationError("el cuerpo de la solicitud es inválido", err.Error()))
 	}
 	if appErr := validateMatrixShape(req.Matrix); appErr != nil {
 		return writeError(c, appErr)
@@ -74,12 +74,12 @@ func roundMatrix(matrix [][]float64) [][]float64 {
 
 func validateMatrixShape(matrix [][]float64) *model.AppError {
 	if len(matrix) == 0 {
-		return model.NewValidationError("the input matrix is empty", "")
+		return model.NewValidationError("la matriz de entrada está vacía", "")
 	}
 	if len(matrix) > maxMatrixDimension || len(matrix[0]) > maxMatrixDimension {
 		return model.NewValidationError(
-			"the input matrix exceeds the maximum allowed size",
-			"matrices are limited to 500x500",
+			"la matriz de entrada excede el tamaño máximo permitido",
+			"las matrices están limitadas a 500x500",
 		)
 	}
 	return nil

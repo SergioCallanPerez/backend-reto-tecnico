@@ -55,8 +55,12 @@ func main() {
 	qrService := service.NewQRService()
 	matrixHandler := handler.NewMatrixHandler(qrService, statsClient)
 
+	rotateService := service.NewRotateService()
+	rotateHandler := handler.NewRotateHandler(rotateService)
+
 	v1 := app.Group("/api/v1")
 	matrixHandler.RegisterRoutes(v1)
+	rotateHandler.RegisterRoutes(v1)
 
 	port := os.Getenv("PORT")
 	if port == "" {

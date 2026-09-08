@@ -31,7 +31,7 @@ export function createApp(): Express {
   app.use('/api/v1', v1);
 
   app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-    const appError = err instanceof AppError ? err : AppError.internal(err instanceof Error ? err.message : 'unknown error');
+    const appError = err instanceof AppError ? err : AppError.internal(err instanceof Error ? err.message : 'error desconocido');
     const logFn = appError.code === 'VALIDATION_ERROR' ? logger.warn : logger.error;
     logFn(appError.code === 'VALIDATION_ERROR' ? 'request_rejected' : 'request_failed', appError.toJSON());
     res.status(appError.httpStatus).json(appError.toJSON());

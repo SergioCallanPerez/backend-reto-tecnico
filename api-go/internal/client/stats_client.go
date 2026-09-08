@@ -30,7 +30,7 @@ func NewStatsClient(baseURL string, timeout time.Duration) *StatsClient {
 func (c *StatsClient) FetchStats(q, r [][]float64) (model.MatrixStats, error) {
 	body, err := json.Marshal(model.QRResult{Q: q, R: r})
 	if err != nil {
-		return model.MatrixStats{}, model.NewInternalError("failed to encode the request to the stats service")
+		return model.MatrixStats{}, model.NewInternalError("no se pudo codificar la solicitud al servicio de estadísticas")
 	}
 
 	url := c.baseURL + "/api/v1/matrix/stats"
@@ -54,32 +54,32 @@ func (c *StatsClient) FetchStats(q, r [][]float64) (model.MatrixStats, error) {
 func (c *StatsClient) doRequest(url string, body []byte) (model.MatrixStats, bool, error) {
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
 	if err != nil {
-		return model.MatrixStats{}, false, model.NewInternalError("failed to build the request to the stats service")
+		return model.MatrixStats{}, false, model.NewInternalError("no se pudo construir la solicitud al servicio de estadísticas")
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return model.MatrixStats{}, true, model.NewUpstreamError("failed to reach the stats service", err.Error())
+		return model.MatrixStats{}, true, model.NewUpstreamError("no se pudo contactar al servicio de estadísticas", err.Error())
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode >= 500 {
 		return model.MatrixStats{}, true, model.NewUpstreamError(
-			"the stats service responded with a server error",
+			"el servicio de estadísticas respondió con un error de servidor",
 			fmt.Sprintf("status %d", resp.StatusCode),
 		)
 	}
 	if resp.StatusCode >= 400 {
 		return model.MatrixStats{}, false, model.NewUpstreamError(
-			"the stats service rejected the request",
+			"el servicio de estadísticas rechazó la solicitud",
 			fmt.Sprintf("status %d", resp.StatusCode),
 		)
 	}
 
 	var stats model.MatrixStats
 	if err := json.NewDecoder(resp.Body).Decode(&stats); err != nil {
-		return model.MatrixStats{}, false, model.NewInternalError("failed to decode the stats service response")
+		return model.MatrixStats{}, false, model.NewInternalError("no se pudo decodificar la respuesta del servicio de estadísticas")
 	}
 	return stats, false, nil
 }

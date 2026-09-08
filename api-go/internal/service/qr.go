@@ -17,24 +17,24 @@ func NewQRService() *QRService {
 func (s *QRService) Factorize(a [][]float64) (q [][]float64, r [][]float64, err error) {
 	m := len(a)
 	if m == 0 {
-		return nil, nil, model.NewValidationError("the input matrix is empty", "")
+		return nil, nil, model.NewValidationError("la matriz de entrada está vacía", "")
 	}
 	n := len(a[0])
 	if n == 0 {
-		return nil, nil, model.NewValidationError("the input matrix has empty rows", "")
+		return nil, nil, model.NewValidationError("la matriz de entrada tiene filas vacías", "")
 	}
 	for _, row := range a {
 		if len(row) != n {
 			return nil, nil, model.NewValidationError(
-				"the input matrix is not rectangular",
-				"all rows must have the same length",
+				"la matriz de entrada no es rectangular",
+				"todas las filas deben tener el mismo largo",
 			)
 		}
 	}
 	if m < n {
 		return nil, nil, model.NewValidationError(
-			"the input matrix must have at least as many rows as columns",
-			"QR factorization requires m >= n",
+			"la matriz de entrada debe tener al menos tantas filas como columnas",
+			"la factorización QR requiere m >= n",
 		)
 	}
 
@@ -57,8 +57,8 @@ func (s *QRService) Factorize(a [][]float64) (q [][]float64, r [][]float64, err 
 		norm := euclideanNorm(v[k])
 		if norm < verificationEpsilon {
 			return nil, nil, model.NewValidationError(
-				"the input matrix does not have linearly independent columns",
-				"QR factorization requires the columns to be linearly independent",
+				"la matriz de entrada no tiene columnas linealmente independientes",
+				"la factorización QR requiere columnas linealmente independientes",
 			)
 		}
 		rMat[k][k] = norm
@@ -84,7 +84,7 @@ func (s *QRService) Factorize(a [][]float64) (q [][]float64, r [][]float64, err 
 	r = rMat
 
 	if !verify(a, q, r) {
-		return nil, nil, model.NewInternalError("QR factorization failed the Q*R ≈ A sanity check")
+		return nil, nil, model.NewInternalError("la factorización QR falló la verificación Q*R ≈ A")
 	}
 
 	return q, r, nil

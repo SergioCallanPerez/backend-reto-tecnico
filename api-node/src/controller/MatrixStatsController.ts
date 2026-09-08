@@ -26,15 +26,15 @@ export class MatrixStatsController {
 // No confía en que solo Go la llame: valida tamaño igual que el handler de Go.
 function validateMatrix(value: unknown, name: string): number[][] {
   if (!Array.isArray(value) || value.length === 0 || !Array.isArray(value[0])) {
-    throw AppError.validation(`"${name}" must be a non-empty array of arrays of numbers`);
+    throw AppError.validation(`"${name}" debe ser un array no vacío de arrays de números`);
   }
   if (value.length > MAX_MATRIX_DIMENSION || value[0].length > MAX_MATRIX_DIMENSION) {
-    throw AppError.validation(`"${name}" exceeds the maximum allowed size`, 'matrices are limited to 500x500');
+    throw AppError.validation(`"${name}" excede el tamaño máximo permitido`, 'las matrices están limitadas a 500x500');
   }
   const width = value[0].length;
   for (const row of value) {
     if (!Array.isArray(row) || row.length !== width || row.some((v: unknown) => typeof v !== 'number' || !Number.isFinite(v))) {
-      throw AppError.validation(`"${name}" must be a rectangular matrix of finite numbers`);
+      throw AppError.validation(`"${name}" debe ser una matriz rectangular de números finitos`);
     }
   }
   return value as number[][];
