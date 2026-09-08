@@ -8,7 +8,7 @@ export class MatrixStatsServiceImpl implements MatrixStatsService {
   computeStats(q: number[][], r: number[][]): MatrixStatsResponse {
     const values = [...q.flat(), ...r.flat()];
     if (values.length === 0) {
-      throw AppError.validation('no values found to compute statistics from');
+      throw AppError.validation('no se encontraron valores para calcular estadísticas');
     }
 
     const sum = values.reduce((acc, value) => acc + value, 0);

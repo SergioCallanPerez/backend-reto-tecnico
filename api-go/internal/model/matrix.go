@@ -27,3 +27,8 @@ type MatrixStats struct {
 	Sum           float64       `json:"sum"`
 	DiagonalCheck DiagonalCheck `json:"diagonalCheck"`
 }
+
+// Respuesta de /matrix/rotate
+type MatrixRotateResponse struct {
+	Matrix [][]float64 `json:"matrix"`
+}
